@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app
+        xmlns="http://java.sun.com/xml/ns/javaee"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
+        version="2.5">
+    <display-name>ServletCookieExample</display-name>
+    <!--<welcome-file-list>-->
+        <!--<welcome-file>/LoginServlet</welcome-file>-->
+    <!--</welcome-file-list>-->
+    <servlet>
+        <servlet-name>logins</servlet-name>
+        <servlet-class>web.server.LoginServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>logins</servlet-name>
+        <url-pattern>/</url-pattern>
+    </servlet-mapping>
+    <!--<servlet>-->
+        <!--<servlet-name>one</servlet-name>-->
+        <!--<servlet-class>web.server.LoginServlet</servlet-class>-->
+    <!--</servlet>-->
+    <!--<servlet-mapping>-->
+        <!--<servlet-name>one</servlet-name>-->
+        <!--<url-pattern>/LoginServlet</url-pattern>-->
+    <!--</servlet-mapping>-->
+    <servlet>
+        <servlet-name>two</servlet-name>
+        <servlet-class>web.server.LogoutServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>two</servlet-name>
+        <url-pattern>/LogoutServlet</url-pattern>
+    </servlet-mapping>
+
+</web-app>

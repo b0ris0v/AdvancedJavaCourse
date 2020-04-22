@@ -1,4 +1,4 @@
-package web.server;
+package web.startupServerExample;
 
 import org.apache.tomcat.InstanceManager;
 import org.apache.tomcat.SimpleInstanceManager;

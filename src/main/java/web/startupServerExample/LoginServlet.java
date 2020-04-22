@@ -1,14 +1,9 @@
-package web.server;
+package web.startupServerExample;
 
-import org.eclipse.jetty.server.Authentication;
-
-import javax.servlet.RequestDispatcher;
-import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.logging.Level;

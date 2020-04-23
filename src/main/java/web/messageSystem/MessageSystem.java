@@ -6,21 +6,21 @@ import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class MessageSystem {
-    private Map<Address, ConcurrentLinkedQueue<Msg>> messages = new HashMap<Address, ConcurrentLinkedQueue<Msg>>();
+    private Map<Address, ConcurrentLinkedQueue<Msg>> messageService = new HashMap<Address, ConcurrentLinkedQueue<Msg>>();
     private AddressService addressService = new AddressService();
 
     public void addService(Abonent abonent) {
         addressService.setAddressMap(abonent);
-        messages.put(abonent.getAddress(), new ConcurrentLinkedQueue<Msg>());
+        messageService.put(abonent.getAddress(), new ConcurrentLinkedQueue<Msg>());
     }
 
     public void sendMessage(Msg message) {
-        Queue<Msg> msgQueue = messages.get(message.getTo());
+        Queue<Msg> msgQueue = messageService.get(message.getTo());
         msgQueue.add(message);
     }
 
     public void execForAbonent(Abonent abonent) {
-        Queue<Msg> msgQueue = messages.get(abonent.getAddress());
+        Queue<Msg> msgQueue = messageService.get(abonent.getAddress());
         if (msgQueue == null)
             return;
         while (!msgQueue.isEmpty()) {

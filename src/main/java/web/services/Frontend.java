@@ -5,6 +5,7 @@ import web.main.TimeHelper;
 import web.messageSystem.Abonent;
 import web.messageSystem.Address;
 import web.messageSystem.MessageSystem;
+import web.messageSystem.MsgGetUserId;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -33,6 +34,10 @@ public class Frontend extends HttpServlet implements Abonent, Runnable {
     private final static long serialVersionUID = 1L;
 //    static int count = 0;
 
+    public Frontend() {
+        super();
+    }
+
     public Frontend(MessageSystem ms) {
         this.ms = ms;
         this.address = new Address();
@@ -40,14 +45,6 @@ public class Frontend extends HttpServlet implements Abonent, Runnable {
     }
 
     public void run() {
-//        class Logger extends TimerTask {
-//            public void run() {
-////                LOGGER.log(Level.INFO, String.valueOf(count));
-//            }
-//        }
-//// And From your main() method or any other method
-//        Timer timer = new Timer();
-//        timer.schedule(new Logger(), 0, 5000);//5 sec
         while(true){
             ms.execForAbonent(this);
             TimeHelper.sleep(10);
@@ -58,7 +55,7 @@ public class Frontend extends HttpServlet implements Abonent, Runnable {
         return address;
     }
 
-//    private void makeSession(HttpServletRequest request, String prefix) {
+//    private String makeSession(HttpServletRequest request, String prefix) {
 //        try {
 //            HttpSession httpSession = request.getSession();
 //            if (httpSession.isNew()) {
@@ -66,17 +63,45 @@ public class Frontend extends HttpServlet implements Abonent, Runnable {
 //            } else {
 //                System.out.printf(prefix + " - Old Session: %s%n", httpSession.getId());
 //            }
+//            return httpSession.getId();
 //        } catch (IllegalStateException ex) {
 //            System.out.println(prefix + " - Exception!" + ex);
+//            return null;
 //        }
 //    }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-//        count++;
-//        makeSession(request, "GET");
-//        request.getSession().setAttribute("mySecretMessage", count);
+////        count++;
+//        String sessionId = makeSession(request, "GET");
+////        request.getSession().setAttribute("mySecretMessage", count);
+//        if (sessionId != null) {
+//            request.getSession().setAttribute("sessionId", sessionId);
+//            request.getServletContext().getRequestDispatcher("/login.jsp").forward(request, response);
+//        } else {
+//            System.out.println("Session error!");
+//        }
+        String name = "Slava";
+        Integer id = nameToId.get(name);
+        if (id != null) {
+            request.getSession().setAttribute("name", name);
+            request.getSession().setAttribute("id", id);
+            request.getServletContext().getRequestDispatcher("/login.jsp").forward(request, response);
+        } else {
+            System.out.println("<h1>Wait for authorization</h1>");
+            Address addressAS = ms.getAddressService().getAddressMap(AccountService.class);
+            ms.sendMessage(new MsgGetUserId(getAddress(), addressAS, name));
+        }
+    }
 
-        request.getServletContext().getRequestDispatcher("/login.jsp").forward(request, response);
+    protected void doPost(HttpServletRequest request,
+                          HttpServletResponse response) throws ServletException, IOException {
+    }
 
+        public void setId(String name, Integer id) {
+        nameToId.put(name, id);
+    }
+
+    public void setMessageSystem(MessageSystem ms) {
+        this.ms = ms;
     }
 }

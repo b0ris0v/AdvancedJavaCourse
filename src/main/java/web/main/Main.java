@@ -20,7 +20,8 @@ import java.util.List;
 public class Main {
     public static void main(String[] args) throws Exception {
         MessageSystem ms = new MessageSystem();
-        Frontend frontend = new Frontend(ms);
+        Frontend frontend = new Frontend();
+        frontend.setMessageSystem(ms);
         AccountService accountService = new AccountService(ms);
 
         (new Thread(frontend)).start();

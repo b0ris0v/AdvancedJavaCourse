@@ -23,7 +23,10 @@ public class AccountService implements Abonent, Runnable{
     }
 
     public void run() {
-
+        while (true) {
+            ms.execForAbonent(this);
+            TimeHelper.sleep(10);
+        }
     }
 
     public Address getAddress() {
@@ -31,7 +34,11 @@ public class AccountService implements Abonent, Runnable{
     }
 
     public Integer getUserId(String name) {
-        TimeHelper.sleep();
+        TimeHelper.sleep(50);
         return fakeAccounter.get(name);
+    }
+
+    public MessageSystem getMessageSystem() {
+        return ms;
     }
 }

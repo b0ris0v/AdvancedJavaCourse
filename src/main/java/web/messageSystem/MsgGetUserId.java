@@ -12,5 +12,6 @@ public class MsgGetUserId extends MsgToAs {
 
     void exec(AccountService accountService) {
         Integer id = accountService.getUserId(name);
+        accountService.getMessageSystem().sendMessage(new MsgUpdateUserId(getTo(), getFrom(), name, id));
     }
 }

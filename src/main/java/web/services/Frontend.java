@@ -16,7 +16,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Frontend extends AbstractHandler implements Abonent, Runnable {
-    private static String APP_NAME = "/test/";
+    private static String APP_NAME = "/";
     private Address address;
     private MessageSystem messageSystem;
 
@@ -55,5 +55,9 @@ public class Frontend extends AbstractHandler implements Abonent, Runnable {
 
     public Address getAddress() {
         return address;
+    }
+
+    public void setId(String name, Integer id) {
+        nameToId.put(name, id);
     }
 }

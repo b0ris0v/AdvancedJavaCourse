@@ -50,7 +50,7 @@ public class JettyJSPConfiguration {
 
 //    private static void setFrontend(Server server) {
 //        //--------------------------
-//        Frontend servletHandler = new Frontend();
+//        FrontendServlet servletHandler = new FrontendServlet();
 //        Thread thread =new Thread(servletHandler);
 //        thread.start();
 //        ContextHandler context = new ContextHandler("/frontend/*");

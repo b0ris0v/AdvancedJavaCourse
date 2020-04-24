@@ -3,7 +3,7 @@
 //import web.messageSystem.MessageSystem;
 //import web.messageSystem.MsgToFrontend;
 //import web.messageSystem.MsgUpdateUserId;
-//import web.services.Frontend;
+//import web.services.FrontendServlet;
 //
 //import javax.servlet.ServletException;
 //import javax.servlet.http.HttpServlet;
@@ -19,7 +19,7 @@
 //        //Start process changing the name
 //
 //        MessageSystem ms = (MessageSystem) request.getSession().getAttribute("ms");
-//        Frontend frontend = (Frontend) request.getSession().getAttribute("frontend");
+//        FrontendServlet frontend = (FrontendServlet) request.getSession().getAttribute("frontend");
 //        ms.sendMessage(new MsgUpdateUserId());
 //    }
 //}

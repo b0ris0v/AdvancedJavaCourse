@@ -1,6 +1,6 @@
 package web.messageSystem;
 
-import web.services.Frontend;
+import web.services.FrontendServlet;
 
 public abstract class MsgToFrontend extends Msg {
 
@@ -9,10 +9,10 @@ public abstract class MsgToFrontend extends Msg {
     }
 
     void exec(Abonent abonent) {
-        if (abonent instanceof Frontend) {
-            exec((Frontend)abonent);
+        if (abonent instanceof FrontendServlet) {
+            exec((FrontendServlet)abonent);
         }
     }
 
-    abstract void exec(Frontend frontend);
+    abstract void exec(FrontendServlet frontend);
 }

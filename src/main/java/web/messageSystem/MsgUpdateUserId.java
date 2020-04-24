@@ -1,6 +1,6 @@
 package web.messageSystem;
 
-import web.services.Frontend;
+import web.services.FrontendServlet;
 
 public class MsgUpdateUserId extends MsgToFrontend {
     private String name;
@@ -12,7 +12,7 @@ public class MsgUpdateUserId extends MsgToFrontend {
         this.id = id;
     }
 
-    void exec(Frontend frontend) {
+    void exec(FrontendServlet frontend) {
         frontend.setId(name, id);
     }
 }

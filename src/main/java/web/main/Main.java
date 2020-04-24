@@ -1,22 +1,10 @@
 package web.main;
 
-import org.apache.tomcat.InstanceManager;
-import org.apache.tomcat.SimpleInstanceManager;
-import org.eclipse.jetty.annotations.ServletContainerInitializersStarter;
-import org.eclipse.jetty.apache.jsp.JettyJasperInitializer;
-import org.eclipse.jetty.plus.annotation.ContainerInitializer;
 import org.eclipse.jetty.server.Server;
-import org.eclipse.jetty.server.handler.ContextHandler;
-import org.eclipse.jetty.webapp.WebAppContext;
+import org.eclipse.jetty.server.session.SessionHandler;
 import web.messageSystem.MessageSystem;
 import web.services.AccountService;
 import web.services.Frontend;
-import web.services.FrontendServlet;
-
-import java.net.URL;
-import java.net.URLClassLoader;
-import java.util.ArrayList;
-import java.util.List;
 
 public class Main {
     public static void main(String[] args) throws Exception {
@@ -29,36 +17,13 @@ public class Main {
 
         Server server = new Server(8080);
 
-//        WebAppContext ctx = getWebAppContext();
-//        server.setHandler(ctx);
+        SessionHandler sessionHandler = new SessionHandler();
+        sessionHandler.setHandler(frontend);
 
-        ContextHandler context = new ContextHandler("/frontend/*");
-        context.setHandler(frontend);
-        server.setHandler(context);
+        server.setHandler(sessionHandler);
 
         server.start();
         server.join();
     }
 
-//    private static WebAppContext getWebAppContext() {
-//        WebAppContext ctx = new WebAppContext();
-//        ctx.setDescriptor("src/main/webapp/WEB-INF/web.xml");
-//        ctx.setResourceBase("src/main/webapp");
-//        ctx.setContextPath("/messageSystem");
-//        ctx.setAttribute("org.eclipse.jetty.server.webapp.ContainerIncludeJarPattern",
-//                ".*/[^/]*servlet-api-[^/]*/.jar$|.*/javax.servlet.jsp.jstl-.*/.jar$|.*/[^/]*taglibs.*/.jar$");
-//        ctx.setAttribute("org.eclipse.jetty.containerInitializers", jspInitializers());
-//        ctx.setAttribute(InstanceManager.class.getName(), new SimpleInstanceManager());
-//        ctx.addBean(new ServletContainerInitializersStarter(ctx), true);
-//        ctx.setClassLoader(new URLClassLoader(new URL[0], Main.class.getClassLoader()));
-//        return ctx;
-//    }
-//
-//    private static List<ContainerInitializer> jspInitializers() {
-//        JettyJasperInitializer sci = new JettyJasperInitializer();
-//        ContainerInitializer initializer = new ContainerInitializer(sci, null);
-//        List<ContainerInitializer> initializers = new ArrayList<ContainerInitializer>();
-//        initializers.add(initializer);
-//        return initializers;
-//    }
 }

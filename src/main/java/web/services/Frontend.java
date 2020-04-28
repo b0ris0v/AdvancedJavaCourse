@@ -13,8 +13,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class Frontend extends AbstractHandler implements Abonent, Runnable {
     private static String APP_NAME = "/";
@@ -24,6 +26,9 @@ public class Frontend extends AbstractHandler implements Abonent, Runnable {
 
     private Map<String, Integer> nameToId = new HashMap<String, Integer>();
     private Map<String, String> sessionToName = new HashMap<String, String>();
+    private boolean gameIsOver = true;
+    private Map<Integer, Integer> gameIdByUserId = new HashMap<Integer, Integer>();
+    private Map<Integer, GameParameters> gameParametersByGameId = new HashMap<Integer, GameParameters>();
 
     public Frontend(MessageSystem messageSystem) {
         this.messageSystem = messageSystem;
@@ -81,6 +86,9 @@ public class Frontend extends AbstractHandler implements Abonent, Runnable {
         if (id != null) {
             System.out.println(cashedName);
             httpServletResponse.getWriter().println("<h1>"+"User name: "+sessionToName.get(sessionId)+" Id: "+id+" sessionId: "+sessionId+"</h1>");
+            httpServletResponse.getWriter().println("Your game is N" + Integer.valueOf(gameIdByUserId(id)));
+
+
         } else {
             if (cashedName != null) {
                 httpServletResponse.getWriter().println("<h1>" + "Wait for authorization, sessionId: " + sessionId + "</h1>");
@@ -90,11 +98,26 @@ public class Frontend extends AbstractHandler implements Abonent, Runnable {
         }
     }
 
+    private int gameIdByUserId(Integer id) {
+        return gameIdByUserId.get(id);
+    }
+
     public Address getAddress() {
         return address;
     }
 
     public void setId(String name, Integer id) {
         nameToId.put(name, id);
+    }
+
+    public void gamePlay(Integer firstPlayer, Integer secondPlayer, Integer gameId) {
+        gameIsOver = false;
+        gameIdByUserId.put(firstPlayer, gameId);
+        gameIdByUserId.put(secondPlayer, gameId);
+        GameParameters gameParameters = new GameParameters();
+        gameParameters.setScore(0);
+        gameParameters.setTime(new Date().getTime());
+
+        gameParametersByGameId.put(gameId, gameParameters);
     }
 }

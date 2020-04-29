@@ -3,29 +3,26 @@ package web.services;
 import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.server.handler.AbstractHandler;
 import web.main.TimeHelper;
-import web.messageSystem.Abonent;
-import web.messageSystem.Address;
-import web.messageSystem.MessageSystem;
-import web.messageSystem.MsgGetUserId;
+import web.messageSystem.*;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 public class Frontend extends AbstractHandler implements Abonent, Runnable {
     private static String APP_NAME = "/";
     private Address address;
     private MessageSystem messageSystem;
-    String cashedName = null;
+    private Map<String, String> cashedNames = new HashMap<String, String>();
 
     private Map<String, Integer> nameToId = new HashMap<String, Integer>();
-    private Map<String, String> sessionToName = new HashMap<String, String>();
+    private Map<String, Integer> sessionToId = new HashMap<String, Integer>();
     private boolean gameIsOver = true;
     private Map<Integer, Integer> gameIdByUserId = new HashMap<Integer, Integer>();
     private Map<Integer, GameParameters> gameParametersByGameId = new HashMap<Integer, GameParameters>();
@@ -50,9 +47,8 @@ public class Frontend extends AbstractHandler implements Abonent, Runnable {
 
         String prefix = "Frontend";
         String sessionId = null;
-        HttpSession httpSession = null;
         try {
-            httpSession = httpServletRequest.getSession();
+            HttpSession httpSession = httpServletRequest.getSession();
             sessionId = httpSession.getId();
             if (httpSession.isNew()) {
                 System.out.printf(prefix + " - New Session: %s%n", httpSession.getId());
@@ -69,31 +65,39 @@ public class Frontend extends AbstractHandler implements Abonent, Runnable {
         }
 
         Integer id = null;
-        if (cashedName == null) {
+        if (cashedNames.isEmpty() || cashedNames.get(sessionId) == null) {
             httpServletResponse.getWriter().println(
             "SessionId: " + sessionId +
             "<form method='post' action='/'>"+
-                "<input type='text' name='cashedName'>"+
+                "<input type='text' name='Name'>"+
                 "<button>Enter Your name</button>"+
             "</form>");
-            cashedName = httpServletRequest.getParameter("cashedName");
+            String name = httpServletRequest.getParameter("Name");
+            if (name != null)
+                cashedNames.put(sessionId, name);
         } else {
-            if (sessionId != null) {
-                id = nameToId.get(cashedName);
-            }
-            sessionToName.put(sessionId, cashedName);
+            id = nameToId.get(cashedNames.get(sessionId));
         }
         if (id != null) {
-            System.out.println(cashedName);
-            httpServletResponse.getWriter().println("<h1>"+"User name: "+sessionToName.get(sessionId)+" Id: "+id+" sessionId: "+sessionId+"</h1>");
-            httpServletResponse.getWriter().println("Your game is N" + Integer.valueOf(gameIdByUserId(id)));
-
-
+            sessionToId.put(sessionId, id);
+            System.out.println(cashedNames);
+            httpServletResponse.getWriter().println("<h1>"+"User name: "+ cashedNames.get(sessionId) +" Id: "+sessionToId.get(sessionId)+" sessionId: "+sessionId+"</h1>");
+            Address addressGM = messageSystem.getAddressService().getAddressMap(GameMechanics.class);
+            messageSystem.sendMessage(new MsgStartGameSession(getAddress(), addressGM, id));
+            if (!gameIsOver) {
+                Integer gameId = Integer.valueOf(gameIdByUserId(id));
+                httpServletResponse.getWriter().println("Your game is N" + gameId);
+                httpServletResponse.getWriter().println("score: " + gameParametersByGameId.get(gameId).getScore());
+                Long date = gameParametersByGameId.get(gameId).getStartTime();
+                SimpleDateFormat df2 = new SimpleDateFormat("dd/MM/yy hh:mm:ss");
+                String dateText = df2.format(date);
+                httpServletResponse.getWriter().println("Game started at : " + dateText);
+            }
         } else {
-            if (cashedName != null) {
+            if (!cashedNames.isEmpty()) {
                 httpServletResponse.getWriter().println("<h1>" + "Wait for authorization, sessionId: " + sessionId + "</h1>");
                 Address addressAS = messageSystem.getAddressService().getAddressMap(AccountService.class);
-                messageSystem.sendMessage(new MsgGetUserId(getAddress(), addressAS, cashedName));
+                messageSystem.sendMessage(new MsgGetUserId(getAddress(), addressAS, cashedNames.get(sessionId)));
             }
         }
     }

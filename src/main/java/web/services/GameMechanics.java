@@ -1,6 +1,6 @@
 package web.services;
 
-import org.eclipse.jetty.util.ConcurrentHashSet;
+import web.main.TimeHelper;
 import web.messageSystem.*;
 
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -20,18 +20,21 @@ public class GameMechanics implements Abonent, Runnable {
     }
 
     public void run() {
-
+        while (true) {
+            ms.execForAbonent(this);
+            TimeHelper.sleep(10);
+        }
     }
 
     public Address getAddress() {
-        return null;
+        return address;
     }
 
     public void startGameSessionFor(Integer id) {
-        //msgToFrontend
-        if (gamers.size() > 0)
-            ms.sendMessage(new MsgMakeNewGameSessionBetween(address, address, id, gamers.poll(), gameIdCreator.incrementAndGet()));
-        else
+        if (gamers.size() > 0) {
+            Address addressF = ms.getAddressService().getAddressMap(Frontend.class);
+            ms.sendMessage(new MsgMakeNewGameSessionBetween(address, addressF, id, gamers.poll(), gameIdCreator.incrementAndGet()));
+        } else
             gamers.add(id);
     }
 }

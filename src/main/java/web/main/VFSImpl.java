@@ -101,7 +101,7 @@ public class VFSImpl implements VFS {
         assert listOfFiles != null;
         for (File listOfFile : listOfFiles) {
             if (listOfFile.isFile()) {
-                fileNames.add(listOfFile.getName());
+                fileNames.add(listOfFile.getAbsolutePath());
             }
         }
 

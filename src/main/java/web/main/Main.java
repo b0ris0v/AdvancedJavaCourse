@@ -25,6 +25,9 @@ public class Main {
 
         server.setHandler(sessionHandler);
 
+//        VFS vfs = new VFSImpl("/Volumes/Macbook/Users/vladislavborisov/IdeaProjects/jspserver/vfs");
+        ResourceFactory resourceFactory = new ResourceFactory();
+
         server.start();
         server.join();
     }

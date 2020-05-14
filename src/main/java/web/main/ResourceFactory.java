@@ -15,7 +15,10 @@ public class ResourceFactory {
         while (iterator.hasNext()) {
             String fullPath = (String) iterator.next();
             System.out.println(fullPath);
-            ReadXMLFileSAX.readXML(fullPath);
+            Object object = ReadXMLFileSAX.readXML(fullPath);
+            if (object.getClass() == SerializationObject.class) {
+                System.out.println(object);
+            }
         }
     }
 

@@ -1,21 +1,19 @@
 package web.dataSets;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Entity
-@Table(name="users")
+@Table(name="demo")
 public class UserDataset {
     @Id
     @Column(name="id")
-    private long id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int id;
 
     @Column(name="name")
     private String name;
 
-    public UserDataset(long id, String name) {
+    public UserDataset(int id, String name) {
         this.id = id;
         this.name = name;
     }

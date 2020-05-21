@@ -20,7 +20,7 @@ public class UserDAO {
         return executor.execQuery(connection, "select * from users where id=" + id, new TResultHandler<UserDataset>() {
             public UserDataset handle(ResultSet resultSet) throws SQLException {
                 resultSet.next();
-                UserDataset dataSet = new UserDataset(resultSet.getLong(1), resultSet.getString(2));
+                UserDataset dataSet = new UserDataset(resultSet.getInt(1), resultSet.getString(2));
                 return dataSet;
             }
         });
